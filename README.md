@@ -1,114 +1,183 @@
-# Athena Chronicles - Full Stack Tech Blog Application
+[Repository](https://github.com/VelzCode/MySQL)<br>
+[Live Page](https://week-8-sql.onrender.com)
 
-A full stack blogging platform built with Node.js, Express, Sequelize, and MySQL on the backend, and vanilla HTML, CSS, and JavaScript on the frontend. Users can register, log in, create and manage their own blog posts, and browse posts filtered by category.
+# Week.8-SQL — Athena Chronicles
 
-## Important Notes (Please Read)
+A full-stack blogging application created for week eight of my coding bootcamp. It combines an HTML, CSS and JavaScript frontend with a Node.js and Express API, using Sequelize to work with a MySQL database.
 
-Some sections of the page are only visible after logging in. Guests will need to register an account to see the following sections:
+## Disclaimer
 
-- Create a Post
-- My Posts
-- Note List
+Athena Systems and the Athena Chronicles project branding are fictional and used for this educational project. Business descriptions and claims are illustrative and do not represent a real company.
+
+## About the project
+
+This project introduces relational database storage for users, posts and categories. Visitors can browse posts, while registered users can publish and manage their own content. A separate note list provides a simple way to save notes in the browser.
+
+The application is hosted on Render and builds on the earlier Athena Systems design with account forms, category browsing and a live clock.
 
 ## Features
 
-- User registration, login, and logout using token based authentication (JWT)
-- Users can create, read, update, and delete their own blog posts
-- Blog posts can be filtered by category
-- A dedicated area where any logged in user can view and manage only their own posts
-- A public browsing area where anyone can view all posts, filterable by category
-- Blog content is rendered dynamically in the browser based on live API responses
-- Passwords are hashed before being stored, and are never returned in any API response
+- **Account registration and login** — Register with an email address and a password of at least eight characters.
+- **Token-based authentication** — Login and registration return a JSON Web Token used for authenticated requests.
+- **Create posts** — Publish a title and content under a selected category.
+- **Manage your posts** — Edit or delete your own posts, with ownership checks on the server and a confirmation prompt before deletion.
+- **Public browsing** — Browse all posts or filter them by category without logging in.
+- **Note list** — Add and delete notes stored locally in the browser.
+- **Live clock** — Display the current time in the navigation area.
+- **Custom interface** — HTML and CSS panels with JavaScript updates driven by API responses.
 
-## Technologies Used
+**Create a Post, My Posts and Note List are only shown after logging in.**
 
-- Node.js and Express for the backend server and RESTful API
-- Sequelize as the ORM, connected to a MySQL database
-- JSON Web Tokens (JWT) for authentication
-- bcrypt for password hashing
-- Vanilla HTML, CSS, and JavaScript for the frontend
-- dotenv for environment variable management
+## Built with
 
-## Folder Structure
+- **HTML5, CSS3 and JavaScript** — Frontend structure, styling and interactions.
+- **Node.js and Express 4** — Server and API routes.
+- **MySQL and Sequelize 6** — Relational data storage, models and queries.
+- **mysql2** — MySQL database driver.
+- **JSON Web Tokens** — Token signing and authentication middleware.
+- **bcrypt** — Password hashing during account creation and password comparison at login.
+- **dotenv** — Loading database settings from environment variables.
+- **nodemon** — Restarting the server during development.
 
-- config - database connection setup
-- models - Sequelize models for User, Post, and Category, plus their associations
-- routes - Express route handlers for users, posts, and categories
-- utils - authentication helper functions (token signing and verification)
-- seeds - seed data and the script used to populate the database
-- public - the frontend files (index.html, style.css, script.js)
-- server.js - the application entry point
+## How to use
 
-## Getting Started (Local Setup)
+1. Open the Live Page link at the top of this README.
+2. Browse public posts and use the category dropdown to filter them.
+3. Register using your email address and matching passwords, or log in to an existing account.
+4. Enter your **email address** in the login field labelled **Username**; registration uses the email as the username.
+5. Choose a category, enter a title and content, then select **Publish Post**.
+6. Use **My Posts** to edit or delete your posts. Editing loads the post into the form and changes its button to **Update Post**.
+7. Use the Note List to add or delete browser-local notes.
+8. Select **Logout** when finished.
 
-### Prerequisites
+## Data storage
 
-- Node.js installed on your machine
-- Access to a MySQL server (local install or a hosted MySQL database)
+| Data | Storage |
+| --- | --- |
+| Users, posts and categories | MySQL database, accessed through Sequelize. |
+| Login token and cached user details | Browser localStorage. |
+| Note list | Browser localStorage, separate from the database. |
 
-### Installation Steps
+Each post belongs to a category and can belong to a user. Users and categories can each have multiple posts.
 
-1. Clone this repository and navigate into the project folder.
+Notes do not sync across devices and are not separated by account within the same browser. Logging out removes the saved token and user details but leaves the note list in browser storage.
 
-2. Copy the example environment file and rename it:
+## Local setup
 
-```bash
-cp .env.example .env
+You will need Node.js with npm and access to a MySQL database.
+
+1. Clone or download the repository.
+2. Install dependencies from the project folder:
+
+   ```bash
+   npm install
+   ```
+
+3. Copy `.env.example` to `.env` and replace the example values with your own database settings:
+
+   ```dotenv
+   DB_DATABASE=posts_db
+   DB_USERNAME=your_database_user
+   DB_PASSWORD=your_database_password
+   DB_HOST=localhost
+   DB_DIALECT=mysql
+   DB_PORT=3306
+   ```
+
+4. Create an empty database matching `DB_DATABASE`. For the example name, run this in your MySQL client:
+
+   ```sql
+   CREATE DATABASE IF NOT EXISTS posts_db;
+   ```
+
+5. For a fresh development database, load the supplied categories and example posts:
+
+   ```bash
+   npm run seed
+   ```
+
+   **Seeding drops and recreates the model tables, deleting existing users, posts and categories. Run it only against a database you intend to reset.** The supplied `db/schema.sql` also drops the existing `posts_db` database before recreating it.
+
+6. Start the server:
+
+   ```bash
+   npm start
+   ```
+
+7. Open **http://localhost:3001**, unless you have set a different `PORT` environment variable.
+
+The connection configuration requests SSL. A local MySQL server without SSL support may require an adjustment to the SSL options in `config/connection.js`. The connection also supports `JAWSDB_URL` as an alternative to the individual database connection settings.
+
+Categories must exist before a post can be created through the form. The seed script supplies categories and example posts; it does not create login accounts.
+
+## Available commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm start` | Start the Express server. |
+| `npm run dev` | Start the server with nodemon. |
+| `npm run seed` | Reset model tables and insert sample categories and posts. |
+| `npm run rebuild` | Start with nodemon and force a table rebuild, deleting existing table data. |
+
+The `npm test` script is a placeholder; an automated test suite is not included.
+
+## Project structure
+
+```text
+Week.8-SQL/
+├── config/             # Sequelize database connection
+├── db/                 # Database creation/reset SQL
+├── models/             # User, Post and Category models and relationships
+├── public/             # HTML, CSS, browser JavaScript and image assets
+├── routes/             # User, post and category API routes
+├── seeds/              # Sample categories, posts and database seed script
+├── utils/              # Authentication middleware and token signing
+├── .env.example        # Example database settings
+├── .gitignore          # Git exclusion rules
+├── package.json        # Dependencies and application commands
+├── package-lock.json   # Locked dependency versions
+├── server.js           # Express setup and database synchronisation
+└── README.md           # Project documentation
 ```
 
-3. Open the new .env file and fill in your own values, including your MySQL database name, username, password, host, dialect, port, and a JWT secret.
+## API overview
 
-4. Install dependencies:
+| Route | Supported actions |
+| --- | --- |
+| `/api` | API welcome response. |
+| `/api/users` | Register an account; list users with authentication. |
+| `/api/users/login` | Log in and receive a token. |
+| `/api/users/me` | Retrieve the authenticated user. |
+| `/api/users/:id` | Retrieve a user; update your own account with authentication. |
+| `/api/users/logout` | Logout response; the browser clears its saved login details. |
+| `/api/posts` | Read posts publicly; create a post with authentication. |
+| `/api/posts/:id` | Read a post; edit or delete your own post with authentication. |
+| `/api/posts/category/:categoryId` | Retrieve posts in a category. |
+| `/api/categories` | List or create categories. |
+| `/api/categories/:id` | Retrieve, update or delete a category. |
 
-```bash
-npm install
-```
+## Current scope
 
-5. Set up the database. Log into MySQL and run the schema file to create the database:
+- The Call Us, Email Us and forgotten-password links are placeholders.
+- The Remember me checkboxes do not change login persistence.
+- Tokens expire after two hours. Cached user details can keep the logged-in interface visible after expiry; logging in again obtains a new token.
+- My Posts loads on page load and after saving or deleting a post. Returning users may need to refresh after login to display their existing posts.
+- Category-changing API routes do not currently require authentication, and there is no category-management form in the frontend.
+- The JWT signing secret is currently defined in `utils/auth.js`; the supplied code does not read a JWT secret from `.env`.
 
-```bash
-mysql -u root -p < db/schema.sql
-```
+## Hosting
 
-6. Seed the database with initial data:
+The live application is hosted on Render. The server serves both the frontend and API and reads its listening port from `PORT`, falling back to `3001`. The project uses `npm install` for dependency installation and `npm start` to launch, with database connection settings supplied through the environment.
 
-```bash
-npm run seed
-```
+## Learning focus
 
-7. Start the application locally:
+- Modelling related users, posts and categories in a SQL database.
+- Using Sequelize models, associations and queries.
+- Building Express routes for create, read, update and delete operations.
+- Connecting browser forms to an API with asynchronous JavaScript.
+- Working with password hashing, authentication tokens and ownership checks.
+- Separating database-backed content from browser-local state.
 
-```bash
-npm start
-```
+## Author
 
-8. Open the application in your browser:
-
-```
-http://localhost:3001
-```
-
-## Deploying to Render
-
-1. Push the project to a GitHub repository.
-2. Set up a MySQL database with a hosting provider of your choice, since Render does not provide MySQL databases natively.
-3. Create a new Web Service on Render and connect it to your GitHub repository.
-4. Set the build command to `npm install` and the start command to `npm start`.
-5. Add the required environment variables in the Render dashboard, matching the variables used in your local .env file.
-6. Deploy the service.
-7. Once deployed, run the seed script if needed to populate the live database.
-
-## Live Deployment
-
-Live URL: https://week-8-sql.onrender.com/
-
-GitHub Repository: https://github.com/VelzCode/Week.8-SQL
-
-## Usage Guide
-
-1. Register a new account using the registration form.
-2. Log in using the login form.
-3. Once logged in, use the Create a Post form to publish a new blog post, selecting a category from the dropdown.
-4. View, edit, or delete your own posts from the My Posts section.
-5. Browse all posts from every user in the Browse Posts by Category section, and use the dropdown to filter by a specific category.
-6. Log out using the Logout button when finished.
+**Jason Dewhurst** — [VelzCode on GitHub](https://github.com/VelzCode)
