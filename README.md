@@ -102,7 +102,7 @@ http://localhost:3001
 
 Live URL: https://week-8-sql.onrender.com/
 
-GitHub Repository: https://github.com/Jay-Dewhurst/Week.8-SQL
+GitHub Repository: https://github.com/VelzCode/Week.8-SQL
 
 ## Usage Guide
 
