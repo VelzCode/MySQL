@@ -106,9 +106,6 @@ logoutBtn.addEventListener("click", function () {
     document.getElementById("posts-container").classList.add("hidden");
     document.getElementById("my-posts-container").classList.add("hidden");
     document.getElementById("notes-container").classList.add("hidden");
-    document.querySelectorAll(".hr-register").forEach(function (hr) {
-        hr.classList.remove("hidden");
-    });
     document.getElementById("welcome-username").textContent = "";
 });
 
